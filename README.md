@@ -1,5 +1,6 @@
 <img src="https://github.com/yuliitezary/yuliitezary/blob/main/github-user-contribution.svg" width="1000" height="300"  /></p>
 все команды которой я ешё не автоматьзировал
+all the commands of which I have not automated yet
 ```
 Запись экрана:
 ffmpeg -f x11grab -y -r 30 -s 1600x900 -i :0.0 -vcodec huffyuv out.avi
@@ -45,4 +46,39 @@ ffmpeg -i $(youtube-dl -f best --get-url https://youtu.be/5qap5aO4i9A) -f flv rt
 Чтобы склеить два видео используйте команду:
 
  ffmpeg -i concat:"video1.mpg|video2.mpg" -c copy video.mpg
+```
+```
+скопировать видео начиная с 5 секунды - продолжительностью 15 секунд
+ffmpeg -i 1.mp4 -ss 00:00:05 -codec copy -t 00:00:15 out.mp4
+--------------------------------------
+скопировать 1 минуту 27 секунд - с конца видео
+ffmpeg -sseof -00:01:27 -i 1.mp4 -c copy out.mp4
+--------------------------------------
+конвертировать видео например .flv в .avi  сначала распаковываем в контейнер .ts
+ffmpeg -i 1.flv -acodec copy -vcodec copy -vbsf h264_mp4toannexb -f mpegts 11.ts
+ffmpeg -i "concat:11.ts" -vcodec copy -acodec copy out.avi
+--------------------------------------
+склеить 3 видеофайла MP4   сначала распаковываем в контейнер .ts
+ffmpeg -i 1.mp4 -acodec copy -vcodec copy -vbsf h264_mp4toannexb -f mpegts 11.ts
+ffmpeg -i 2.mp4 -acodec copy -vcodec copy -vbsf h264_mp4toannexb -f mpegts 22.ts
+ffmpeg -i 3.mp4 -acodec copy -vcodec copy -vbsf h264_mp4toannexb -f mpegts 33.ts
+ffmpeg -i "concat:11.ts|22.ts|33.ts" -vcodec copy -acodec copy out.mp4
+--------------------------------------
+скопировать с 10 секунды с начала видео
+ffmpeg -ss 00:00:10 -i 1.mp4 -c copy out.mp4
+--------------------------------------
+Разбить видео по кадрам. создаём папку FOTO внутри папки ffmpeg -  ffmpeg\FOTO 
+нажимаем клавишу SHIFT - внутри папки ffmpeg, правой клавишей мышки вызываем меню, должно появится "ОТКРЫТЬ ОКНО КОМАНД" - запускаем Командную строку - вставляем команду
+ffmpeg -i 1.mp4 FOTO/image%d.png 
+жмём ENTR
+
+--------------------------------------
+ЗАХВАТ ЭКРАНА
+ffmpeg.exe -y -rtbufsize 100M -f gdigrab -framerate 30 -probesize 10M -draw_mouse 1 -i desktop -c:v libx264 -r 30 -preset ultrafast -tune zerolatency -crf 25 -pix_fmt yuv420p screen.mp4
+--------------------------------------
+изменить ориентацию видео без перекодирования (0, 90, 180, 270) 
+ffmpeg -i 1.mp4 -codec copy -map_metadata 0 -metadata:s:v:0 rotate=0 0.mp4
+--------------------------------------
+конвертировать аудио в видео с картинкой
+ffmpeg -i 1.mp3 -i 1.PNG -c copy 1.avi
 ```
